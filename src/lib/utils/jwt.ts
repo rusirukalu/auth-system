@@ -33,8 +33,8 @@ export const setTokenCookie = (token: string) => {
   
   cookieStore.set('auth_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true, // Always use secure in production
+    sameSite: 'lax', // Changed from 'strict' to 'lax' for better compatibility
     maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
     path: '/',
   });
@@ -46,9 +46,9 @@ export const removeTokenCookie = () => {
   
   cookieStore.set('auth_token', '', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 0,
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 0, // Set to 0 to expire immediately
     path: '/',
   });
 };
