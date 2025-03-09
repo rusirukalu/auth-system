@@ -9,13 +9,14 @@ export function middleware(request: NextRequest) {
   const isPublicPath = path === '/' || 
                       path === '/login' || 
                       path === '/register' || 
+                      path === '/about' ||
                       path.startsWith('/api');
   
   // Get the token from cookie
   const token = request.cookies.get('auth_token')?.value;
   
-  // If trying to access a protected path without a token, redirect to login
-  if (!isPublicPath && !token) {
+  // Prevent redirect loops - only redirect if not already on login page
+  if (!isPublicPath && !token && path !== '/login') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
   

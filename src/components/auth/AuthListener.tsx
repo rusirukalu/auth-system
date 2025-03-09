@@ -5,15 +5,19 @@ import { useAppDispatch } from '@/redux/hooks';
 import { setUser, clearUser } from '@/redux/features/authSlice';
 import { useGetCurrentUserQuery } from '@/redux/services/authApi';
 import { toast } from 'sonner';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function AuthListener() {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
+  const router = useRouter();
 
   // Skip the query entirely on public pages
   const isPublicPage =
-    pathname === '/' || pathname === '/login' || pathname === '/register';
+    pathname === '/' ||
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname === '/about';
   const { data, error, isLoading } = useGetCurrentUserQuery(undefined, {
     // Skip the query on public pages
     skip: isPublicPage,
@@ -30,13 +34,18 @@ export function AuthListener() {
       dispatch(clearUser());
 
       // Show toast only for non-public pages
+      // Don't redirect - let the middleware handle it
       if ('status' in error && error.status === 401 && !isPublicPage) {
         toast('Authentication Error', {
           description: 'Please log in to continue',
         });
+        // Navigate to login page directly rather than relying solely on middleware
+        if (!pathname.includes('/login')) {
+          router.push('/login');
+        }
       }
     }
-  }, [data, error, dispatch, isPublicPage]);
+  }, [data, error, dispatch, isPublicPage, pathname, router]);
 
   return null;
 }
