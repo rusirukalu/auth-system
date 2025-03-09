@@ -5,10 +5,19 @@ import { useAppDispatch } from '@/redux/hooks';
 import { setUser, clearUser } from '@/redux/features/authSlice';
 import { useGetCurrentUserQuery } from '@/redux/services/authApi';
 import { toast } from 'sonner';
+import { usePathname } from 'next/navigation';
 
 export function AuthListener() {
   const dispatch = useAppDispatch();
-  const { data, error, isLoading } = useGetCurrentUserQuery();
+  const pathname = usePathname();
+
+  // Skip the query entirely on public pages
+  const isPublicPage =
+    pathname === '/' || pathname === '/login' || pathname === '/register';
+  const { data, error, isLoading } = useGetCurrentUserQuery(undefined, {
+    // Skip the query on public pages
+    skip: isPublicPage,
+  });
 
   useEffect(() => {
     // If we have user data, set it in the state
@@ -20,18 +29,14 @@ export function AuthListener() {
     if (error) {
       dispatch(clearUser());
 
-      // Only show toast for authentication errors, not on initial load
-      if ('status' in error && error.status === 401) {
-        // Don't show toast for auth errors on initial page load
-        // This prevents annoying "you need to login" messages when users first visit
-        if (document.referrer) {
-          toast('Authentication Error', {
-            description: 'Please log in to continue',
-          });
-        }
+      // Show toast only for non-public pages
+      if ('status' in error && error.status === 401 && !isPublicPage) {
+        toast('Authentication Error', {
+          description: 'Please log in to continue',
+        });
       }
     }
-  }, [data, error, dispatch, toast]);
+  }, [data, error, dispatch, isPublicPage]);
 
-  return null; // This component doesn't render anything
+  return null;
 }
