@@ -7,9 +7,8 @@
       }
     ],
     "env": {
-      "MONGODB_URI": "@mongodb-uri",
-      "JWT_SECRET": "@jwt-secret",
-      "NEXTAUTH_SECRET": "@nextauth-secret"
+      "MONGODB_URI": "mongodb+srv://salwathurarusiru:PMaSy3DwFdhG2NV7@clusterkalu.chxkj.mongodb.net/auth-system?retryWrites=true&w=majority&appName=clusterkalu",
+      "JWT_SECRET": "5464_Yts"
     }
   }
   
