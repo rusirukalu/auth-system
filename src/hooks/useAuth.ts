@@ -85,18 +85,31 @@ export const useAuth = () => {
   // Logout function
   const logout = async () => {
     try {
+      // Call the logout API
       await logoutMutation().unwrap();
+      
+      // Clear user from Redux state
       dispatch(clearUser());
+      
+      // Show success message
       toast('Logged Out', {
         description: 'You have been logged out successfully',
       });
-      router.push('/login'); // Redirect to login page
+      
+      // Use a hard navigation instead of Next.js router to ensure complete state reset
+      window.location.href = '/login';
+      
       return true;
     } catch (error: any) {
       const errorMessage = error.data?.message || 'Logout failed. Please try again.';
       toast('Logout Error', {
         description: errorMessage,
       });
+      
+      // Even if there's an error, try to clear local state and redirect
+      dispatch(clearUser());
+      window.location.href = '/login';
+      
       return false;
     }
   };
