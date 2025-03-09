@@ -44,11 +44,13 @@ export const setTokenCookie = (token: string) => {
 export const removeTokenCookie = () => {
   const cookieStore = cookies();
   
+  // Use multiple approaches to ensure cookie is removed
   cookieStore.set('auth_token', '', {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: 0, // Set to 0 to expire immediately
+    maxAge: 0,
+    expires: new Date(0), // Set to epoch time
     path: '/',
   });
 };

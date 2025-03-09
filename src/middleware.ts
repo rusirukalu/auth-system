@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Get the path
+  // Get the path and full URL for logging
   const path = request.nextUrl.pathname;
+  const fullUrl = request.nextUrl.toString();
   
   // Define paths that are considered public
   const isPublicPath = path === '/' || 
@@ -15,29 +16,36 @@ export function middleware(request: NextRequest) {
   // Get the token from cookie
   const token = request.cookies.get('auth_token')?.value;
   
-  // Prevent redirect loops - only redirect if not already on login page
-  if (!isPublicPath && !token && path !== '/login') {
-    return NextResponse.redirect(new URL('/login', request.url));
+  // Safety mechanism to prevent redirect loops
+  // Check for a special query parameter that indicates we've already redirected once
+  const hasRedirectedBefore = request.nextUrl.searchParams.has('_redirected');
+  
+  // If we've already redirected, don't redirect again
+  if (hasRedirectedBefore) {
+    return NextResponse.next();
   }
   
-  // If trying to access login/register while authenticated, redirect to dashboard
+  // If trying to access a protected path without a token, redirect to login with special param
+  if (!isPublicPath && !token) {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('_redirected', 'true');
+    return NextResponse.redirect(loginUrl);
+  }
+  
+  // If trying to access login/register while authenticated, redirect to dashboard with special param
   if ((path === '/login' || path === '/register') && token) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    const dashboardUrl = new URL('/dashboard', request.url);
+    dashboardUrl.searchParams.set('_redirected', 'true');
+    return NextResponse.redirect(dashboardUrl);
   }
   
   return NextResponse.next();
 }
 
-// See https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+// Update matcher to be more specific
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     * 1. /api (API routes)
-     * 2. /_next (Next.js internals)
-     * 3. /static (static files)
-     * 4. All files in the /public folder
-     */
-    '/((?!api|_next|static|.*\\..*|_vercel).*)',
+    '/(dashboard|profile|login|register)',
+    '/'
   ],
 };
