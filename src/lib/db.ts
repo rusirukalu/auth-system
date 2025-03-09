@@ -3,7 +3,12 @@ import mongoose from 'mongoose';
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+  // In production, continue even if MONGODB_URI is not available during build
+  if (process.env.NODE_ENV === 'production') {
+    console.warn('No MONGODB_URI found during build, will connect at runtime');
+  } else {
+    throw new Error('Please define the MONGODB_URI environment variable');
+  }
 }
 
 /**
@@ -27,7 +32,13 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+    // Make sure MONGODB_URI is available at runtime
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error('MONGODB_URI is required to connect to MongoDB');
+    }
+
+    cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
       return mongoose;
     });
   }
