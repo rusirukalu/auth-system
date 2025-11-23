@@ -8,7 +8,7 @@ export async function authMiddleware(
 ): Promise<NextResponse> {
   try {
     // Get token from cookies
-    const token = getTokenFromCookies();
+    const token = await getTokenFromCookies();
 
     if (!token) {
       return apiResponse.unauthorized('Authentication required');

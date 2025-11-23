@@ -1,13 +1,32 @@
 @import 'tailwindcss';
 
+:root {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --primary: #06b6d4;
+  --primary-foreground: #000000;
+  --muted: #1f1f1f;
+  --muted-foreground: #a3a3a3;
+  --border: #262626;
+  --input: #262626;
+  --ring: #06b6d4;
+}
+
 html,
 body {
-  background-color: #121317;
+  background-color: var(--background);
+  color: var(--foreground);
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 body {
   overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
 }

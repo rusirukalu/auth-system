@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         password,
       });
       console.log('User created successfully:', user._id.toString());
-    } catch (createError) {
+    } catch (createError: any) {
       console.error('Error creating user:', createError);
       
       if ('code' in createError && createError.code === 11000) {
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     // Set token in HTTP-only cookie
     console.log('Setting auth cookie...');
     try {
-      setTokenCookie(token);
+      await setTokenCookie(token);
       console.log('Auth cookie set successfully');
     } catch (cookieError) {
       console.error('Error setting cookie:', cookieError);

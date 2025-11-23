@@ -46,7 +46,7 @@ export function RegisterForm() {
     const { confirmPassword, ...userData } = values;
     const success = await register(userData);
     if (!success) {
-      setAuthError('Registration failed. Please try again.');
+      setAuthError('REGISTRATION_FAILED');
     }
   };
 
@@ -56,13 +56,21 @@ export function RegisterForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="w-full max-w-md mx-auto bg-black border-white/10">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            Create Account
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-mono text-cyan-500">
+              NEW_USER_PROTOCOL
+            </span>
+            <div className="flex gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-black text-center uppercase tracking-tighter">
+            Initialize Account
           </CardTitle>
-          <CardDescription className="text-center">
-            Register to get started with our application
+          <CardDescription className="text-center font-mono text-xs">
+            CREATE_NEW_IDENTITY_RECORD
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -73,15 +81,18 @@ export function RegisterForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold tracking-wider">
+                      Identity_Name
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Your name"
+                        placeholder="FULL NAME"
                         {...field}
                         disabled={loading}
+                        className="bg-white/5 border-white/10 focus:border-cyan-500 text-white placeholder:text-gray-600"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="font-mono text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -90,16 +101,19 @@ export function RegisterForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold tracking-wider">
+                      Email_Address
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="you@example.com"
+                        placeholder="USER@DOMAIN.COM"
                         type="email"
                         {...field}
                         disabled={loading}
+                        className="bg-white/5 border-white/10 focus:border-cyan-500 text-white placeholder:text-gray-600"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="font-mono text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -108,16 +122,19 @@ export function RegisterForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold tracking-wider">
+                      Secret_Key
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Create a password"
+                        placeholder="••••••••"
                         type="password"
                         {...field}
                         disabled={loading}
+                        className="bg-white/5 border-white/10 focus:border-cyan-500 text-white placeholder:text-gray-600"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="font-mono text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -126,16 +143,19 @@ export function RegisterForm() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold tracking-wider">
+                      Verify_Key
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Confirm your password"
+                        placeholder="••••••••"
                         type="password"
                         {...field}
                         disabled={loading}
+                        className="bg-white/5 border-white/10 focus:border-cyan-500 text-white placeholder:text-gray-600"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="font-mono text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -144,53 +164,36 @@ export function RegisterForm() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-red-500 text-sm mt-2"
+                  className="p-3 border border-red-500/50 bg-red-500/10 text-red-500 text-xs font-mono"
                 >
-                  {authError}
+                  [ERROR] {authError}
                 </motion.div>
               )}
 
               <Button
                 type="submit"
-                className="w-full bg-primary-dark hover:bg-primary-dark/90"
+                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase tracking-widest mt-4"
                 disabled={loading}
               >
                 {loading ? (
-                  <div className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Creating account...
+                  <div className="flex items-center gap-2">
+                    <span className="animate-pulse">PROCESSING...</span>
                   </div>
                 ) : (
-                  'Register'
+                  'REGISTER_IDENTITY'
                 )}
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
-            Already have an account?{' '}
-            <Link href="/login" className="text-accent hover:underline">
-              Login
+        <CardFooter className="flex justify-center border-t border-white/10 pt-6">
+          <p className="text-xs text-gray-500 font-mono">
+            EXISTING_RECORD?{' '}
+            <Link
+              href="/login"
+              className="text-cyan-500 hover:text-cyan-400 hover:underline"
+            >
+              ACCESS_LOGIN
             </Link>
           </p>
         </CardFooter>

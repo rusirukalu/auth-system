@@ -1,15 +1,16 @@
 import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ReduxProvider } from '@/redux/provider';
 import { Toaster } from 'sonner';
 import { AuthListener } from '@/components/auth/AuthListener';
 
-const inter = Inter({ subsets: ['latin'] });
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Authentication System',
-  description: 'MERN Stack Authentication System with Next.js',
+  title: 'CITADEL | Secure Identity Management',
+  description:
+    'Next-generation identity management infrastructure built for absolute security.',
 };
 
 export default function RootLayout({
@@ -29,11 +30,11 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${jetbrainsMono.className} bg-[#0a0a0a] text-white`}>
         <ReduxProvider>
           <AuthListener />
           {children}
-          <Toaster />
+          <Toaster theme="dark" />
         </ReduxProvider>
       </body>
     </html>

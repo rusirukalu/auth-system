@@ -43,7 +43,7 @@ export function LoginForm() {
     setAuthError(null);
     const success = await login(values);
     if (!success) {
-      setAuthError('Invalid email or password');
+      setAuthError('INVALID_CREDENTIALS');
     }
   };
 
@@ -53,33 +53,46 @@ export function LoginForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="w-full max-w-md mx-auto bg-black border-white/10">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            Login
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-mono text-cyan-500">
+              ACCESS_LEVEL_1
+            </span>
+            <div className="flex gap-1">
+              <div className="w-2 h-2 bg-red-500 rounded-full" />
+              <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-black text-center uppercase tracking-tighter">
+            System Login
           </CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access your account
+          <CardDescription className="text-center font-mono text-xs">
+            ENTER_CREDENTIALS_TO_PROCEED
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold tracking-wider">
+                      Email_Address
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="you@example.com"
+                        placeholder="USER@DOMAIN.COM"
                         type="email"
                         {...field}
                         disabled={loading}
+                        className="bg-white/5 border-white/10 focus:border-cyan-500 text-white placeholder:text-gray-600"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="font-mono text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -88,16 +101,19 @@ export function LoginForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold tracking-wider">
+                      Access_Key
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Your password"
+                        placeholder="••••••••"
                         type="password"
                         {...field}
                         disabled={loading}
+                        className="bg-white/5 border-white/10 focus:border-cyan-500 text-white placeholder:text-gray-600"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="font-mono text-xs text-red-500" />
                   </FormItem>
                 )}
               />
@@ -106,53 +122,36 @@ export function LoginForm() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-red-500 text-sm mt-2"
+                  className="p-3 border border-red-500/50 bg-red-500/10 text-red-500 text-xs font-mono"
                 >
-                  {authError}
+                  [ERROR] {authError}
                 </motion.div>
               )}
 
               <Button
                 type="submit"
-                className="w-full bg-primary-dark hover:bg-primary-dark/90"
+                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase tracking-widest"
                 disabled={loading}
               >
                 {loading ? (
-                  <div className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Logging in...
+                  <div className="flex items-center gap-2">
+                    <span className="animate-pulse">AUTHENTICATING...</span>
                   </div>
                 ) : (
-                  'Login'
+                  'INITIATE_SESSION'
                 )}
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link href="/register" className="text-accent hover:underline">
-              Register
+        <CardFooter className="flex justify-center border-t border-white/10 pt-6">
+          <p className="text-xs text-gray-500 font-mono">
+            NO_ACCESS_TOKEN?{' '}
+            <Link
+              href="/register"
+              className="text-cyan-500 hover:text-cyan-400 hover:underline"
+            >
+              REQUEST_ACCESS
             </Link>
           </p>
         </CardFooter>

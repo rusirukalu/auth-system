@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
+import { FaTerminal } from 'react-icons/fa';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -49,7 +50,7 @@ export function Navbar() {
   };
 
   // Handle smooth scrolling for anchor links
-  const handleSmoothScroll = (e, href) => {
+  const handleSmoothScroll = (e: React.MouseEvent, href: string) => {
     if (isAuthPage && href === '#hero') {
       // Don't prevent default, let it navigate to '/'
       return;
@@ -67,29 +68,37 @@ export function Navbar() {
   };
 
   const publicLinks = [
-    { href: isAuthPage ? '/' : '#hero', label: 'Home' },
-    ...(isAuthPage ? [] : [{ href: '#tech', label: 'Tech Stack' }]),
+    { href: isAuthPage ? '/' : '#hero', label: 'HOME' },
+    ...(isAuthPage ? [] : [{ href: '#tech', label: 'SYSTEM_MODULES' }]),
   ];
 
   const authLinks = [
-    { href: '/dashboard', label: 'Dashboard' },
-    { href: '/profile', label: 'Profile' },
+    { href: '/dashboard', label: 'DASHBOARD' },
+    { href: '/profile', label: 'PROFILE' },
   ];
 
   const navLinks = mounted ? (isAuthenticated ? authLinks : publicLinks) : [];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-[#0d0e13]/60 backdrop-blur-md' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${
+        scrolled
+          ? 'bg-black/80 backdrop-blur-md border-white/10'
+          : 'bg-transparent border-transparent'
       }`}
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-xl font-bold flex items-center group">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-[#8d99ae] group-hover:from-white group-hover:to-white transition-all duration-300">
-              NEXT Auth
+          <Link
+            href="/"
+            className="text-xl font-black flex items-center group tracking-tighter"
+          >
+            <span className="text-white group-hover:text-cyan-500 transition-colors duration-300">
+              PROJECT
+              <span className="text-cyan-500 group-hover:text-white">
+                _CITADEL
+              </span>
             </span>
           </Link>
 
@@ -104,14 +113,15 @@ export function Navbar() {
                   onClick={(e) => handleSmoothScroll(e, link.href)}
                 >
                   <span
-                    className={`text-sm font-medium transition-colors duration-300 group-hover:text-[#ef233c] ${
-                      pathname === link.href
-                        ? 'text-[#ef233c]'
-                        : 'text-white/90'
+                    className={`text-sm font-bold transition-colors duration-300 group-hover:text-cyan-500 ${
+                      pathname === link.href ? 'text-cyan-500' : 'text-white/70'
                     }`}
                   >
                     {link.label}
                   </span>
+                  <span
+                    className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 group-hover:w-full ${pathname === link.href ? 'w-full' : ''}`}
+                  />
                 </Link>
               ))}
 
@@ -119,64 +129,36 @@ export function Navbar() {
               <>
                 {isAuthenticated ? (
                   <div className="flex items-center space-x-4">
-                    {' '}
-                    {/* Removed ml-4 */}
-                    <span className="text-sm text-[#8d99ae]">
-                      {user?.name || 'User'}
-                    </span>
+                    <div className="flex items-center gap-2 px-3 py-1 border border-white/10 bg-white/5">
+                      <div className="w-2 h-2 bg-green-500 animate-pulse rounded-full" />
+                      <span className="text-xs font-mono text-gray-400">
+                        {user?.name || 'USER_ID'}
+                      </span>
+                    </div>
                     <Button
                       variant="outline"
-                      className="text-white border-white/10 hover:border-white/20 hover:bg-white/5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 rounded-xl"
-                      size="sm"
+                      className="h-9 px-4 text-xs border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"
                       onClick={handleLogout}
                       disabled={loading}
                     >
-                      {loading ? (
-                        <span className="flex items-center">
-                          <svg
-                            className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Logging out...
-                        </span>
-                      ) : (
-                        'Logout'
-                      )}
+                      {loading ? 'TERMINATING...' : 'LOGOUT'}
                     </Button>
                   </div>
                 ) : (
-                  <div className="flex items-center space-x-3">
-                    {' '}
-                    {/* Removed ml-4 */}
+                  <div className="flex items-center space-x-4">
+                    <Link
+                      href="/login"
+                      className="text-sm font-bold text-white/70 hover:text-cyan-500 transition-colors"
+                    >
+                      LOGIN
+                    </Link>
                     <Button
                       asChild
-                      variant="ghost"
-                      className="text-white hover:text-[#ef233c] hover:bg-transparent transition-colors duration-300"
+                      className="h-10 px-6 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs"
                     >
-                      <Link href="/login">Login</Link>
-                    </Button>
-                    <Button
-                      asChild
-                      variant="default"
-                      className="bg-[#ef233c]/80 hover:bg-[#ef233c] text-white transition-all duration-300 backdrop-blur-sm rounded-xl"
-                    >
-                      <Link href="/register">Register</Link>
+                      <Link href="/register">
+                        <FaTerminal className="mr-2" /> INITIALIZE
+                      </Link>
                     </Button>
                   </div>
                 )}
@@ -186,7 +168,7 @@ export function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white p-2 transition-transform duration-300 hover:scale-110 active:scale-95"
+            className="md:hidden text-white p-2 border border-white/10 bg-white/5"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
@@ -233,89 +215,67 @@ export function Navbar() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                className="md:hidden mt-4"
+                className="md:hidden mt-4 border-t border-white/10 pt-4"
               >
-                <div className="flex flex-col space-y-3 pt-3 pb-4 backdrop-blur-xl bg-[#121317]/80 rounded-2xl border border-white/5 shadow-lg p-2">
-                  <div className="space-y-1">
-                    {publicLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className={`py-2.5 px-4 rounded-xl block transition-colors duration-300 ${
-                          pathname === link.href
-                            ? 'text-[#ef233c]'
-                            : 'text-white hover:text-[#ef233c]'
-                        }`}
-                        onClick={(e) => handleSmoothScroll(e, link.href)}
-                      >
-                        <div className="flex items-center">
-                          <span>{link.label}</span>
-                          {pathname === link.href && (
-                            <motion.div
-                              layoutId="activeIndicator"
-                              className="ml-auto w-1.5 h-1.5 rounded-full bg-[#ef233c]"
-                            />
-                          )}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                <div className="flex flex-col space-y-2">
+                  {publicLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`py-3 px-4 border border-white/5 bg-white/5 hover:border-cyan-500/50 transition-colors ${
+                        pathname === link.href
+                          ? 'text-cyan-500 border-cyan-500/50'
+                          : 'text-white'
+                      }`}
+                      onClick={(e) => handleSmoothScroll(e, link.href)}
+                    >
+                      <span className="font-mono text-sm">{link.label}</span>
+                    </Link>
+                  ))}
 
                   {isAuthenticated && (
-                    <div className="space-y-1 pt-1 border-t border-[#8d99ae]/10">
+                    <>
                       {authLinks.map((link) => (
                         <Link
                           key={link.href}
                           href={link.href}
-                          className={`py-2.5 px-4 rounded-xl block transition-colors duration-300 ${
+                          className={`py-3 px-4 border border-white/5 bg-white/5 hover:border-cyan-500/50 transition-colors ${
                             pathname === link.href
-                              ? 'text-[#ef233c]'
-                              : 'text-white hover:text-[#ef233c]'
+                              ? 'text-cyan-500 border-cyan-500/50'
+                              : 'text-white'
                           }`}
                           onClick={closeMobileMenu}
                         >
-                          <div className="flex items-center">
-                            <span>{link.label}</span>
-                            {pathname === link.href && (
-                              <motion.div
-                                layoutId="activeIndicator"
-                                className="ml-auto w-1.5 h-1.5 rounded-full bg-[#ef233c]"
-                              />
-                            )}
-                          </div>
+                          <span className="font-mono text-sm">
+                            {link.label}
+                          </span>
                         </Link>
                       ))}
-                    </div>
-                  )}
-
-                  {isAuthenticated ? (
-                    <div className="pt-2 border-t border-[#8d99ae]/10 px-3">
-                      <div className="px-2 py-2 text-sm text-[#8d99ae]">
-                        Signed in as {user?.name || 'User'}
-                      </div>
                       <button
-                        className="w-full text-left mt-1 px-4 py-2.5 text-white bg-[#ef233c]/80 hover:bg-[#ef233c] rounded-xl transition-colors duration-300"
+                        className="w-full text-left mt-2 px-4 py-3 text-red-500 border border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-colors font-mono text-sm"
                         onClick={handleLogout}
                         disabled={loading}
                       >
-                        {loading ? 'Logging out...' : 'Logout'}
+                        {loading ? 'TERMINATING...' : 'LOGOUT'}
                       </button>
-                    </div>
-                  ) : (
-                    <div className="pt-2 border-t border-[#8d99ae]/10 px-3 space-y-2">
+                    </>
+                  )}
+
+                  {!isAuthenticated && (
+                    <div className="grid grid-cols-2 gap-2 mt-2">
                       <Link
                         href="/login"
-                        className="block px-4 py-2.5 text-center text-white hover:text-[#ef233c] border border-white/10 rounded-xl transition-colors duration-300"
+                        className="text-center py-3 border border-white/10 hover:bg-white/5 text-white font-bold text-sm"
                         onClick={closeMobileMenu}
                       >
-                        Login
+                        LOGIN
                       </Link>
                       <Link
                         href="/register"
-                        className="block px-4 py-2.5 text-center bg-[#ef233c]/80 hover:bg-[#ef233c] text-white rounded-xl transition-colors duration-300"
+                        className="text-center py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-sm"
                         onClick={closeMobileMenu}
                       >
-                        Register
+                        REGISTER
                       </Link>
                     </div>
                   )}

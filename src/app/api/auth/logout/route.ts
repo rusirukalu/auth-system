@@ -5,7 +5,7 @@ import { removeTokenCookie } from '@/lib/utils/jwt';
 export async function POST(request: NextRequest) {
   try {
     // Remove the auth token cookie
-    removeTokenCookie();
+    await removeTokenCookie();
     
     // Return response with cache control headers
     return NextResponse.json(

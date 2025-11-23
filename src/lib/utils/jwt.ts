@@ -28,9 +28,9 @@ export const verifyToken = (token: string): JwtPayload | null => {
 };
 
 // Set JWT Token in HTTP-only cookie
-export const setTokenCookie = (token: string) => {
-  const cookieStore = cookies();
-  
+export const setTokenCookie = async (token: string) => {
+  const cookieStore = await cookies();
+
   cookieStore.set('auth_token', token, {
     httpOnly: true,
     secure: true, // Always use secure in production
@@ -41,9 +41,9 @@ export const setTokenCookie = (token: string) => {
 };
 
 // Remove JWT Token from cookies
-export const removeTokenCookie = () => {
-  const cookieStore = cookies();
-  
+export const removeTokenCookie = async () => {
+  const cookieStore = await cookies();
+
   // Use multiple approaches to ensure cookie is removed
   cookieStore.set('auth_token', '', {
     httpOnly: true,
@@ -56,8 +56,8 @@ export const removeTokenCookie = () => {
 };
 
 // Get JWT Token from cookies
-export const getTokenFromCookies = (): string | undefined => {
-  const cookieStore = cookies();
+export const getTokenFromCookies = async (): Promise<string | undefined> => {
+  const cookieStore = await cookies();
   const token = cookieStore.get('auth_token')?.value;
   return token;
 };

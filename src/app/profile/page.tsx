@@ -5,13 +5,16 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Navbar } from '@/components/ui/Navbar';
+import { GridBackground } from '@/components/landing/GridBackground';
 import {
   FaUser,
   FaEnvelope,
   FaUserShield,
   FaSignOutAlt,
   FaTrash,
+  FaIdCard,
 } from 'react-icons/fa';
+import { Button } from '@/components/ui/button';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
@@ -31,28 +34,29 @@ export default function ProfilePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col bg-[#121317] text-white">
+      <div className="min-h-screen flex flex-col bg-[#0a0a0a] text-white font-mono relative overflow-hidden">
+        <GridBackground />
         <Navbar />
-        {/* Decorative Backgrounds */}
-        <div className="fixed inset-0 z-0 overflow-hidden">
-          <div className="absolute top-40 left-[10%] w-72 h-72 rounded-full bg-[#ef233c] opacity-5 blur-[100px]"></div>
-          <div className="absolute bottom-20 right-[15%] w-96 h-96 rounded-full bg-[#2b2d42] opacity-10 blur-[100px]"></div>
-        </div>
 
-        <main className="flex-grow container mx-auto px-4 py-20 relative z-10">
+        <main className="flex-grow container mx-auto px-4 py-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="mb-12 border-b border-white/10 pb-8"
           >
-            <div className="flex items-center">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ef233c] to-[#d90429] flex items-center justify-center mr-4 shadow-lg shadow-[#ef233c]/20">
-                <FaUser className="text-white text-xl" />
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-cyan-500 flex items-center justify-center border-2 border-white">
+                <FaUser className="text-black text-3xl" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-[#8d99ae]">
-                Your Profile
-              </h1>
+              <div>
+                <div className="text-xs text-cyan-500 font-bold uppercase tracking-widest mb-1">
+                  Citadel_Identity
+                </div>
+                <h1 className="text-4xl font-black uppercase tracking-tighter text-white">
+                  Operative_Profile
+                </h1>
+              </div>
             </div>
           </motion.div>
 
@@ -64,53 +68,60 @@ export default function ProfilePage() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="lg:col-span-2"
             >
-              <div className="backdrop-blur-xl bg-[#2b2d42]/10 rounded-2xl border border-white/5 shadow-xl overflow-hidden relative">
-                {/* Decorative Elements */}
-                <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#ef233c]/10 rounded-full blur-3xl"></div>
-                <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#2b2d42]/20 rounded-full blur-3xl"></div>
+              <div className="bg-black border border-white/10 p-1 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-2 text-xs text-gray-600 font-mono">
+                  ID: {user?._id || 'UNKNOWN'}
+                </div>
 
-                <div className="relative p-6">
-                  <h2 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">
-                    Profile Information
+                <div className="bg-white/5 p-6 md:p-8">
+                  <h2 className="text-xl font-bold text-white mb-8 border-b border-white/10 pb-4 uppercase flex items-center gap-2">
+                    <FaIdCard className="text-cyan-500" />
+                    Personal_Information
                   </h2>
 
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <div className="flex items-center text-[#8d99ae] mb-1">
-                        <FaUser className="mr-2" />
-                        <label className="text-sm font-medium">Name</label>
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-2">
+                        <div className="flex items-center text-gray-500 mb-1 text-xs uppercase tracking-wider">
+                          <FaUser className="mr-2" />
+                          <label>Full_Name</label>
+                        </div>
+                        <div className="text-lg font-bold text-white border-b border-white/20 pb-2 font-mono">
+                          {user?.name || 'LOADING...'}
+                        </div>
                       </div>
-                      <div className="text-lg font-semibold bg-[#1a1c25] rounded-xl p-4 border border-white/5">
-                        {user?.name || 'Loading...'}
+
+                      <div className="space-y-2">
+                        <div className="flex items-center text-gray-500 mb-1 text-xs uppercase tracking-wider">
+                          <FaEnvelope className="mr-2" />
+                          <label>Email_Address</label>
+                        </div>
+                        <div className="text-lg font-bold text-white border-b border-white/20 pb-2 font-mono">
+                          {user?.email || 'LOADING...'}
+                        </div>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex items-center text-[#8d99ae] mb-1">
-                        <FaEnvelope className="mr-2" />
-                        <label className="text-sm font-medium">Email</label>
-                      </div>
-                      <div className="text-lg font-semibold bg-[#1a1c25] rounded-xl p-4 border border-white/5">
-                        {user?.email || 'Loading...'}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center text-[#8d99ae] mb-1">
+                      <div className="flex items-center text-gray-500 mb-1 text-xs uppercase tracking-wider">
                         <FaUserShield className="mr-2" />
-                        <label className="text-sm font-medium">
-                          Account Type
-                        </label>
+                        <label>Clearance_Level</label>
                       </div>
-                      <div className="text-lg font-semibold bg-[#1a1c25] rounded-xl p-4 border border-white/5">
-                        {user?.isAdmin ? 'Administrator' : 'Standard User'}
+                      <div className="inline-flex items-center px-3 py-1 border border-cyan-500/50 bg-cyan-500/10 text-cyan-500 text-sm font-bold uppercase">
+                        {user?.isAdmin
+                          ? 'LEVEL_5_COMMANDER'
+                          : 'LEVEL_1_OPERATIVE'}
                       </div>
                     </div>
 
-                    <div className="pt-4">
-                      <button className="w-full bg-[#2b2d42]/40 text-[#8d99ae] border border-white/10 rounded-xl py-3 backdrop-blur-md transition-all duration-300 hover:bg-[#2b2d42]/60 cursor-not-allowed">
-                        Edit Profile (Coming Soon)
-                      </button>
+                    <div className="pt-8 border-t border-white/10">
+                      <Button
+                        variant="outline"
+                        className="w-full md:w-auto border-white/20 hover:bg-white/10 text-gray-400 hover:text-white uppercase tracking-widest text-xs"
+                        disabled
+                      >
+                        Edit_Profile [LOCKED]
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -123,10 +134,10 @@ export default function ProfilePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <div className="backdrop-blur-xl bg-[#2b2d42]/10 rounded-2xl border border-white/5 shadow-xl overflow-hidden h-full">
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">
-                    Account Actions
+              <div className="bg-black border border-white/10 h-full">
+                <div className="p-6 md:p-8">
+                  <h2 className="text-xl font-bold mb-8 border-b border-white/10 pb-4 uppercase text-red-500">
+                    Danger_Zone
                   </h2>
 
                   <div className="space-y-6">
@@ -134,67 +145,50 @@ export default function ProfilePage() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="space-y-4 bg-[#1a1c25] p-4 rounded-xl border border-[#ef233c]/20"
+                        className="space-y-4 bg-red-500/5 p-4 border border-red-500/20"
                       >
-                        <p className="text-sm text-[#8d99ae]">
-                          Are you sure you want to logout?
+                        <p className="text-sm text-red-400 font-mono">
+                          [WARN] Confirm session termination?
                         </p>
                         <div className="flex gap-3">
                           <button
                             onClick={handleLogout}
-                            className="flex-1 bg-gradient-to-r from-[#ef233c] to-[#d90429] hover:from-[#d90429] hover:to-[#ef233c] text-white transition-all duration-500 py-2 rounded-xl hover:shadow-lg hover:shadow-[#ef233c]/20 transform hover:-translate-y-1"
+                            className="flex-1 bg-red-500 hover:bg-red-600 text-black font-bold uppercase text-xs py-3 transition-colors"
                           >
-                            <div className="flex items-center justify-center">
-                              <FaSignOutAlt className="mr-2" />
-                              Yes, Logout
-                            </div>
+                            CONFIRM
                           </button>
                           <button
                             onClick={handleLogoutCancel}
-                            className="flex-1 border border-white/10 text-white hover:bg-white/5 backdrop-blur-md transition-all duration-300 py-2 rounded-xl"
+                            className="flex-1 border border-white/10 text-white hover:bg-white/5 uppercase text-xs py-3 transition-colors"
                           >
-                            Cancel
+                            CANCEL
                           </button>
                         </div>
                       </motion.div>
                     ) : (
-                      <button
+                      <Button
                         onClick={handleLogoutConfirm}
-                        className="w-full border border-white/10 text-white hover:bg-white/5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 rounded-xl py-3 flex items-center justify-center"
+                        variant="destructive"
+                        className="w-full bg-red-500/10 text-red-500 border-red-500/50 hover:bg-red-500 hover:text-white uppercase tracking-widest text-xs"
                       >
                         <FaSignOutAlt className="mr-2" />
-                        <span>Logout</span>
-                      </button>
+                        TERMINATE_SESSION
+                      </Button>
                     )}
 
-                    <button
+                    <Button
                       disabled
-                      className="w-full border border-white/10 text-[#8d99ae] bg-white/5 backdrop-blur-md rounded-xl py-3 flex items-center justify-center opacity-60"
+                      variant="outline"
+                      className="w-full border-white/10 text-gray-600 uppercase tracking-widest text-xs opacity-50 cursor-not-allowed hover:bg-transparent"
                     >
                       <FaTrash className="mr-2" />
-                      <span>Delete Account</span>
-                    </button>
+                      DELETE_RECORD
+                    </Button>
 
-                    <div className="mt-2 p-4 bg-[#ef233c]/10 border border-[#ef233c]/20 rounded-xl">
-                      <p className="text-sm text-[#ef233c] flex items-start">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 mr-2 flex-shrink-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        <span>
-                          Account deletion functionality will be implemented in
-                          a future update.
-                        </span>
+                    <div className="mt-4 p-4 bg-white/5 border border-white/10 text-[10px] text-gray-500 font-mono">
+                      <p>
+                        [NOTE] Account deletion requires Level 5 authorization.
+                        Contact system administrator for manual purge.
                       </p>
                     </div>
                   </div>
